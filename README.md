@@ -48,11 +48,11 @@ In case of a tie in waiting times, the following priority is used:
 
 ## Results
 
-- **Test Accuracy:** ~88%
+- **Test Accuracy:** 65.83%
 - **Training Visualizations:** Plots of loss and accuracy over epochs using `matplotlib`
 
 <p align="center">
-  <img src="https://uploadkon.ir/uploads/4aca25_25Figure-1.png" alt="Training Graphs" width="500"/>
+  <img src="https://uploadkon.ir/uploads/89f425_25Figure-2.png" alt="Training Graphs" width="500"/>
 </p>
 
 ---
