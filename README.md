@@ -96,9 +96,11 @@ In case of a tie in waiting times, the following priority is used:
 
 ---
 
-## Author
+## Authors
 
-**Mahyas Golparian**  
+- **Mahyas Golparian**  
+- **Sara Kargar**
+
 Final Project — Operating Systems Course, HUT  
 Instructor: Dr. Mirhossein Dezfulian
 
