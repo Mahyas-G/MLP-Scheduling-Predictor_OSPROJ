@@ -52,7 +52,7 @@ In case of a tie in waiting times, the following priority is used:
 - **Training Visualizations:** Plots of loss and accuracy over epochs using `matplotlib`
 
 <p align="center">
-  <img src="https://yourdomain.com/path-to-accuracy-loss-plot.png" alt="Training Graphs" width="500"/>
+  <img src="https://uploadkon.ir/uploads/4aca25_25Figure-1.png" alt="Training Graphs" width="500"/>
 </p>
 
 ---
