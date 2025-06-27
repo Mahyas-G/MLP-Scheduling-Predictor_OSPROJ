@@ -2,7 +2,7 @@
 
 This project uses a **Multi-Layer Perceptron (MLP)** neural network to predict the optimal **CPU scheduling algorithm** for a given set of processes based on their arrival and burst times.
 
-It was developed as a final project for the **Operating Systems** course at Hamedan University of Technology (HUT).
+It was developed as a final project for the **Operating Systems** course at **Hamedan University of Technology (HUT)**.
 
 ---
 
@@ -39,7 +39,7 @@ In case of a tie in waiting times, the following priority is used:
 ## Model Architecture
 
 - **Input Layer:** 8 features (4 arrival + 4 burst)
-- **Hidden Layers:** 2 fully connected layers with ReLU activation and dropout
+- **Hidden Layers:** 2 fully connected layers (ReLU, Dropout)
 - **Output Layer:** 3 neurons (one for each scheduling algorithm)
 - **Loss Function:** CrossEntropyLoss
 - **Optimizer:** Adam
@@ -48,51 +48,76 @@ In case of a tie in waiting times, the following priority is used:
 
 ## Results
 
-- **Test Accuracy:** 65.83%
-- **Training Visualizations:** Plots of loss and accuracy over epochs using `matplotlib`
+- The model was trained over 100 epochs.
+- **Final Test Accuracy:** 92.5%
+- **Final Test Loss:** 0.2061
 
-<p align="center">
-  <img src="https://uploadkon.ir/uploads/89f425_25Figure-2.png" alt="Training Graphs" width="500"/>
-</p>
+### Classification Report
+```
+              precision    recall  f1-score   support
+
+           0       0.86      0.92      0.89        77
+           1       0.96      0.93      0.94       163
+
+    accuracy                           0.93       240
+   macro avg       0.91      0.92      0.92       240
+weighted avg       0.93      0.93      0.93       240
+```
+
+### Confusion Matrix
+```
+[[ 71   6]
+ [ 12 151]]
+```
+
+### Training Curve
+![Training Graph](assets/performance_plot_20250627_195645.png)
 
 ---
 
 ##  How to Run
 
-1. **Clone this repository:**
+1. **Clone this Repository**
    ```bash
    git clone https://github.com/Mahyas-G/MLP-Scheduling-Predictor_OSPROJ.git
    cd MLP-Scheduling-Predictor_OSPROJ
    ```
 
-2. **(Optional) Create and activate virtual environment:**
+2. **Create and Activate Environment (optional)**
    ```bash
    conda create -n mlp_sched python=3.9
    conda activate mlp_sched
    ```
 
-3. **Install dependencies:**
+3. **Install Dependencies**
    ```bash
    pip install -r requirements.txt
    ```
 
-4. **Run the training script:**
+4. **Train the Model**
    ```bash
    python train.py
    ```
-
+   
+5. **Run Predictor on New Input**
+   ```bash
+   python predictor.py
+   ```
+   
 ---
 
 ## Files Overview
 
-| File                  | Description                                      |
-|-----------------------|--------------------------------------------------|
-| `dataset.csv`         | Final dataset with features and labels           |
-| `dataset_generator.py`| Script to simulate processes and generate dataset|
-| `model.py`            | PyTorch implementation of the MLP model          |
-| `train.py`            | Training loop and evaluation logic               |
-| `requirements.txt`    | List of required Python libraries                |
-| `README.md`           | Project documentation (this file)                |
+| File                  | Description                                        |
+|-----------------------|----------------------------------------------------|
+| `dataset.csv`         | Final dataset with 1200 samples                    |
+| `dataset_generator.py`| Code to generate the dataset with correct labels   |
+| `model.py`            | PyTorch MLP model definition                       |
+| `train.py`            | Training loop, evaluation, model saving            |
+| `predictor.py`        | Script to predict best algorithm for new inputs    |
+| `requirements.txt`    | Python package dependencies                        |
+| `README.md`           | Project documentation                              |
+| `assets/training_plot.png` | Accuracy/Loss training curve image             |
 
 ---
 
@@ -101,8 +126,8 @@ In case of a tie in waiting times, the following priority is used:
 - **Mahyas Golparian**  
 - **Sara Kargar**
 
-Final Project — Operating Systems Course, HUT  
 Instructor: Dr. Mirhossein Dezfulian
+Final Project — Operating Systems Course — Hamedan University of Technology (HUT) 
 
 ---
 
