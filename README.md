@@ -126,8 +126,11 @@ weighted avg       0.93      0.93      0.93       240
 - **Mahyas Golparian**  
 - **Sara Kargar**
 
+
 Instructor: Dr. Mirhossein Dezfulian
+
 Final Project — Operating Systems Course — Hamedan University of Technology (HUT) 
+
 
 ---
 
