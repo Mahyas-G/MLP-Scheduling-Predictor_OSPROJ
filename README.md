@@ -20,21 +20,69 @@ The model is trained using a dataset of simulated scheduling scenarios and imple
 
 ## Dataset
 
-The dataset includes **1200 samples**, each consisting of:
+By default, the dataset generator now **creates a balanced dataset** with **equal samples for each class** (`FCFS`, `SJF`, `RR`).
 
-- 4 process **arrival times**
-- 4 process **burst times**
-- A **label** indicating the best scheduling algorithm based on lowest total waiting time
+* **Default size:** 1200 samples → 400 per class
+* **Balanced mode:** Enabled by default
+* **Unbalanced mode:** Optional (`--unbalanced`)
 
-### Label Selection Rules
+Each row includes:
 
-In case of a tie in waiting times, the following priority is used:
+* 4 process **arrival times**
+* 4 process **burst times**
+* A **label** indicating the best algorithm based on the lowest total waiting time
 
-- If `FCFS` and `SJF` tie → label is `FCFS`
-- If `FCFS` and `RR` tie → label is `RR`
-- If `SJF` and `RR` tie → label is `SJF`
+### Optional Features
+
+* Include waiting time columns (`FCFS_WT`, `SJF_WT`, `RR_WT`) using `--include_wt`
+* Control tie-breaking policy (`--tie_policy code1` or `--tie_policy pdf`)
+* Change ranges for arrival/burst times with `--arr_low`, `--arr_high`, `--bt_low`, `--bt_high`
+* Disable sorting of arrival times with `--no_sort_arrivals`
 
 ---
+
+### **Label Selection Rules**
+
+Default (code1 priority):
+
+* FCFS > SJF > RR in case of tie
+
+Or you can apply **PDF-based policy** using:
+
+```
+--tie_policy pdf
+```
+
+Rules:
+
+* If `FCFS` and `SJF` tie → `FCFS`
+* If `FCFS` and `RR` tie → `RR`
+* If `SJF` and `RR` tie → `SJF`
+
+---
+
+### **Generate Dataset (Default Balanced Mode)**
+
+```bash
+python dataset_generator.py
+# Creates dataset.csv with 1200 samples (400 per class)
+```
+
+### **Generate Unbalanced Dataset**
+
+```bash
+python dataset_generator.py --unbalanced --n_total 1500
+```
+
+### **Generate Balanced Dataset with Waiting Times**
+
+```bash
+python dataset_generator.py --include_wt
+# Adds FCFS_WT, SJF_WT, RR_WT columns
+```
+
+---
+
 
 ## Model Architecture
 
