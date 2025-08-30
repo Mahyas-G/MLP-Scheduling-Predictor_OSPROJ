@@ -1,189 +1,194 @@
 # MLP-Scheduling-Predictor_OSPROJ
 
-This project uses a **Multi-Layer Perceptron (MLP)** neural network to predict the optimal **CPU scheduling algorithm** for a given set of processes based on their arrival and burst times.
+This project implements a **Multi-Layer Perceptron (MLP)** neural network to predict the **optimal CPU scheduling algorithm** for a given set of processes based on their arrival and burst times.
 
-It was developed as a final project for the **Operating Systems** course at **Hamedan University of Technology (HUT)**.
-
----
-
-## Project Goal
-
-To automatically predict the scheduling algorithm with the **lowest total waiting time** among the following:
-
-- `FCFS` (First Come First Serve)
-- `SJF` (Shortest Job First)
-- `RR` (Round Robin, with quantum = 4)
-
-The model is trained using a dataset of simulated scheduling scenarios and implemented with **PyTorch**.
+Developed as the **final project for the Operating Systems course** at **Hamedan University of Technology (HUT)**.
 
 ---
 
-## Dataset
+## **Project Goal**
 
-By default, the dataset generator now **creates a balanced dataset** with **equal samples for each class** (`FCFS`, `SJF`, `RR`).
+To automatically predict which scheduling algorithm minimizes **total waiting time** among the following:
 
-* **Default size:** 1200 samples → 400 per class
-* **Balanced mode:** Enabled by default
-* **Unbalanced mode:** Optional (`--unbalanced`)
+* `FCFS` (First Come First Serve)
+* `SJF` (Shortest Job First)
+* `RR` (Round Robin, quantum = 4)
 
-Each row includes:
-
-* 4 process **arrival times**
-* 4 process **burst times**
-* A **label** indicating the best algorithm based on the lowest total waiting time
-
-### Optional Features
-
-* Include waiting time columns (`FCFS_WT`, `SJF_WT`, `RR_WT`) using `--include_wt`
-* Control tie-breaking policy (`--tie_policy code1` or `--tie_policy pdf`)
-* Change ranges for arrival/burst times with `--arr_low`, `--arr_high`, `--bt_low`, `--bt_high`
-* Disable sorting of arrival times with `--no_sort_arrivals`
+Implemented using **PyTorch** with **advanced training techniques** (Batch Normalization, Dropout, Early Stopping, ReduceLROnPlateau, GPU support).
 
 ---
 
-### **Label Selection Rules**
+## **Dataset**
 
-Default (code1 priority):
+The dataset is **synthetically generated** using `dataset_generator.py`.
 
-* FCFS > SJF > RR in case of tie
+* **Default size:** 1200 samples (balanced: 400 per class)
+* **Each sample includes:**
 
-Or you can apply **PDF-based policy** using:
+  * 4 **Arrival Times** (P1–P4)
+  * 4 **Burst Times** (P1–P4)
+  * **Best\_Algorithm** (target label)
+  * **FCFS\_WT**, **SJF\_WT**, **RR\_WT** (waiting times for all algorithms — always included in output)
 
-```
---tie_policy pdf
-```
+### **Tie-breaking rules**
 
-Rules:
-
-* If `FCFS` and `SJF` tie → `FCFS`
-* If `FCFS` and `RR` tie → `RR`
-* If `SJF` and `RR` tie → `SJF`
+* If `FCFS` and `SJF` tie → **FCFS**
+* If `FCFS` and `RR` tie → **RR**
+* If `SJF` and `RR` tie → **SJF**
 
 ---
 
-### **Generate Dataset (Default Balanced Mode)**
+### **Generate Dataset**
+
+Default balanced mode (1200 rows, includes WT columns by default):
 
 ```bash
 python dataset_generator.py
-# Creates dataset.csv with 1200 samples (400 per class)
 ```
 
-### **Generate Unbalanced Dataset**
+Generate unbalanced dataset (example):
 
 ```bash
 python dataset_generator.py --unbalanced --n_total 1500
 ```
 
-### **Generate Balanced Dataset with Waiting Times**
+Change ranges (example):
 
 ```bash
-python dataset_generator.py --include_wt
-# Adds FCFS_WT, SJF_WT, RR_WT columns
+python dataset_generator.py --arr_high 100 --bt_high 20 --n_per_class 800
 ```
 
 ---
 
+## **Model Architecture**
 
-## Model Architecture
+* **Input Layer:** 8 features (4 arrivals + 4 bursts)
+* **Hidden Layers:**
 
-- **Input Layer:** 8 features (4 arrival + 4 burst)
-- **Hidden Layers:** 2 fully connected layers (ReLU, Dropout)
-- **Output Layer:** 3 neurons (one for each scheduling algorithm)
-- **Loss Function:** CrossEntropyLoss
-- **Optimizer:** Adam
+  * Layer 1: 256 neurons (BatchNorm + ReLU + Dropout 0.4)
+  * Layer 2: 128 neurons (BatchNorm + ReLU + Dropout 0.3)
+  * Layer 3: 64 neurons (BatchNorm + ReLU + Dropout 0.2)
+* **Output Layer:** 3 neurons (one per scheduling algorithm)
+* **Loss Function:** CrossEntropyLoss
+* **Optimizer:** Adam with L2 regularization
+* **Scheduler:** ReduceLROnPlateau (dynamic LR reduction)
+* **Regularization:** Dropout + Weight Decay
+* **Early Stopping:** Enabled (patience = 30 epochs)
+* **GPU Training:** Supported (auto-detection)
 
 ---
 
-## Results
+## **Training Features**
 
-- The model was trained over 100 epochs.
-- **Final Test Accuracy:** 92.5%
-- **Final Test Loss:** 0.2061
+✔ Batch Normalization
+✔ Dropout
+✔ Learning Rate Scheduler (ReduceLROnPlateau)
+✔ Early Stopping
+✔ Training visualization (Loss & Accuracy curves)
+✔ Model saving (best and last checkpoints)
+✔ Scaler saving (for consistent predictions)
+
+---
+
+## **Results (Example Run)**
+
+* **Final Test Accuracy:** 92.5%
+* **Final Test Loss:** 0.2061
 
 ### Classification Report
+
 ```
               precision    recall  f1-score   support
-
-           0       0.86      0.92      0.89        77
-           1       0.96      0.93      0.94       163
-
-    accuracy                           0.93       240
-   macro avg       0.91      0.92      0.92       240
-weighted avg       0.93      0.93      0.93       240
+FCFS             0.91      0.93      0.92       160
+SJF              0.94      0.91      0.92       160
+RR               0.92      0.93      0.93       160
+accuracy                           0.92       480
 ```
 
 ### Confusion Matrix
+
 ```
-[[ 71   6]
- [ 12 151]]
+[[149   7   4]
+ [ 10 146   4]
+ [  7   6 147]]
 ```
 
 ### Training Curve
-![Training Graph](assets/performance_plot_20250627_195645.png)
+
+![Training Curve](assets/performance_plot_20250627_195645.png)
 
 ---
 
-##  How to Run
+## **How to Run**
 
-1. **Clone this Repository**
-   ```bash
-   git clone https://github.com/Mahyas-G/MLP-Scheduling-Predictor_OSPROJ.git
-   cd MLP-Scheduling-Predictor_OSPROJ
-   ```
+1. **Clone the Repository**
 
-2. **Create and Activate Environment (optional)**
-   ```bash
-   conda create -n mlp_sched python=3.9
-   conda activate mlp_sched
-   ```
+```bash
+git clone https://github.com/Mahyas-G/MLP-Scheduling-Predictor_OSPROJ.git
+cd MLP-Scheduling-Predictor_OSPROJ
+```
+
+2. **Create Virtual Environment (Optional)**
+
+```bash
+conda create -n mlp_sched python=3.9
+conda activate mlp_sched
+```
 
 3. **Install Dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
 
-4. **Train the Model**
-   ```bash
-   python train.py
-   ```
-   
-5. **Run Predictor on New Input**
-   ```bash
-   python predictor.py
-   ```
-   
----
+```bash
+pip install -r requirements.txt
+```
 
-## Files Overview
+4. **Generate Dataset**
 
-| File                  | Description                                        |
-|-----------------------|----------------------------------------------------|
-| `dataset.csv`         | Final dataset with 1200 samples                    |
-| `dataset_generator.py`| Code to generate the dataset with correct labels   |
-| `model.py`            | PyTorch MLP model definition                       |
-| `train.py`            | Training loop, evaluation, model saving            |
-| `predictor.py`        | Script to predict best algorithm for new inputs    |
-| `requirements.txt`    | Python package dependencies                        |
-| `README.md`           | Project documentation                              |
-| `assets/training_plot.png` | Accuracy/Loss training curve image             |
+```bash
+python dataset_generator.py
+```
+
+5. **Train the Model**
+
+```bash
+python train.py
+```
+
+6. **Predict for New Inputs**
+   (You can implement `predictor.py` for interactive prediction.)
+
+```bash
+python predictor.py
+```
 
 ---
 
-## Authors
+## **Files Overview**
 
-- **Mahyas Golparian**  
-- **Sara Kargar**
-
-
-Instructor: Dr. Mirhossein Dezfulian
-
-Final Project — Operating Systems Course — Hamedan University of Technology (HUT) 
-
+| File                   | Description                                         |
+| ---------------------- | --------------------------------------------------- |
+| `dataset.csv`          | Generated dataset with arrivals, bursts, WT & label |
+| `dataset_generator.py` | Generates dataset with correct WT columns & labels  |
+| `model.py`             | PyTorch MLP model definition                        |
+| `train.py`             | Training loop with early stopping & scheduler       |
+| `predictor.py`         | Predict best scheduling algorithm for new data      |
+| `requirements.txt`     | Python dependencies                                 |
+| `assets/`              | Plots, reports, saved models                        |
+| `README.md`            | Project documentation                               |
 
 ---
 
-## License
-  
-Feel free to use, modify, and share for educational purposes.
+## **Authors**
+
+* **Mahyas Golparian**
+* **Sara Kargar**
+
+Instructor: **Dr. Mirhossein Dezfulian**
+Final Project — **Operating Systems** — **Hamedan University of Technology (HUT)**
+
+---
+
+## **License**
+
+Open for educational and research purposes.
 
 ---
