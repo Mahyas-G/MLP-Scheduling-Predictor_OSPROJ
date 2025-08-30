@@ -55,7 +55,7 @@ python dataset_generator.py --unbalanced --n_total 1500
 Change ranges (example):
 
 ```bash
-python dataset_generator.py --arr_high 100 --bt_high 20 --n_per_class 800
+python dataset_generator.py --arr_high 100 --bt_high 30 --n_per_class 2000
 ```
 
 ---
