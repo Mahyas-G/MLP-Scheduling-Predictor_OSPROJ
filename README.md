@@ -81,12 +81,19 @@ python dataset_generator.py --arr_high 100 --bt_high 20 --n_per_class 800
 ## **Training Features**
 
 ✔ Batch Normalization
+
 ✔ Dropout
+
 ✔ Learning Rate Scheduler (ReduceLROnPlateau)
+
 ✔ Early Stopping
+
 ✔ Training visualization (Loss & Accuracy curves)
+
 ✔ Model saving (best and last checkpoints)
+
 ✔ Scaler saving (for consistent predictions)
+
 
 ---
 
