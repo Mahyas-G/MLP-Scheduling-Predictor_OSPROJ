@@ -99,30 +99,41 @@ python dataset_generator.py --arr_high 100 --bt_high 30 --n_per_class 2000
 
 ## **Results (Example Run)**
 
-* **Final Test Accuracy:** 92.5%
-* **Final Test Loss:** 0.2061
+Device: cpu
+* **Final Test Accuracy:** 90%
+* **Final Test Loss:** 0.2584
 
 ### Classification Report
 
 ```
               precision    recall  f1-score   support
-FCFS             0.91      0.93      0.92       160
-SJF              0.94      0.91      0.92       160
-RR               0.92      0.93      0.93       160
-accuracy                           0.92       480
+
+        FCFS     0.9462    0.8350    0.8871       400
+          RR     0.8480    0.9900    0.9135       400
+         SJF     0.9211    0.8750    0.8974       400
+
+    accuracy                         0.9000      1200
+   macro avg     0.9051    0.9000    0.8993      1200
+weighted avg     0.9051    0.9000    0.8993      1200
 ```
 
 ### Confusion Matrix
 
 ```
-[[149   7   4]
- [ 10 146   4]
- [  7   6 147]]
+[[334  40  26]
+ [  0 396   4]
+ [ 19  31 350]]
 ```
+
+### Artifacts:
+* Best model: assets/best_model_20250831_105520.pth
+* Last model: assets/last_model_20250831_105520.pth
+* Scaler: assets/scaler_20250831_105520.pkl
+* Plot: assets/performance_plot_20250831_105520.png
 
 ### Training Curve
 
-![Training Curve](assets/performance_plot_20250627_195645.png)
+![Training Curve](assets/performance_plot_20250831_105520.png)
 
 ---
 
